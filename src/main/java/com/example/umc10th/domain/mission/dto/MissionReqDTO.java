@@ -1,4 +1,4 @@
 package com.example.umc10th.domain.mission.dto;
 
-public class MissionRecDTO {
+public class MissionReqDTO {
 }
