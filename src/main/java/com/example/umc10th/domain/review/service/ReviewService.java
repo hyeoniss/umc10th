@@ -13,4 +13,7 @@ public interface ReviewService {
 
     // 가게 상세 조회
     ReviewResDTO.StoreDetailRes getStoreDetail(Long storeId);
+
+    // 내가 작성한 리뷰 조회 (커서 기반 페이지네이션)
+    ReviewResDTO.MyReviewCursorRes getMyReviews(ReviewReqDTO.MyReviewsReq request);
 }

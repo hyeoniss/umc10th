@@ -41,4 +41,12 @@ public class ReviewController {
         BaseSuccessCode code = ReviewSuccessCode.OK;
         return ApiResponse.onSuccess(code, reviewService.getStoreDetail(storeId));
     }
+
+    // 내가 작성한 리뷰 조회 (커서 기반 페이지네이션)
+    @PostMapping("/v1/users/me/reviews")
+    public ApiResponse<ReviewResDTO.MyReviewCursorRes> getMyReviews(
+            @RequestBody ReviewReqDTO.MyReviewsReq request) {
+        BaseSuccessCode code = ReviewSuccessCode.OK;
+        return ApiResponse.onSuccess(code, reviewService.getMyReviews(request));
+    }
 }
