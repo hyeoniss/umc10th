@@ -40,4 +40,21 @@ public class ReviewResDTO {
             Float rating,
             List<String> menus
     ) {}
+
+    // 내가 작성한 리뷰 목록 (커서 기반 페이지네이션)
+    @Builder
+    public record MyReviewCursorRes(
+            List<MyReviewInfo> reviews,
+            Long nextCursor,
+            Boolean hasNext
+    ) {
+        @Builder
+        public record MyReviewInfo(
+                Long reviewId,
+                String reviewContent,
+                Long starRate,
+                LocalDateTime reviewDate,
+                String storeName
+        ) {}
+    }
 }

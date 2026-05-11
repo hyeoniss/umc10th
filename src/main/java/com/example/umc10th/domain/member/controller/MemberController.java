@@ -6,6 +6,7 @@ import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class MemberController {
     // 회원가입
     @PostMapping("/v1/auth/signup")
     public ApiResponse<MemberResDTO.SignupRes> signup(
-            @RequestBody MemberReqDTO.SignupReq request) {
+            @Valid @RequestBody MemberReqDTO.SignupReq request) {
         BaseSuccessCode code = MemberSuccessCode.SIGNUP_OK;
         return ApiResponse.onSuccess(code, memberService.signup(request));
     }
@@ -35,7 +36,7 @@ public class MemberController {
     // 로그인
     @PostMapping("/v1/auth/login")
     public ApiResponse<MemberResDTO.LoginRes> login(
-            @RequestBody MemberReqDTO.LoginReq request) {
+            @Valid @RequestBody MemberReqDTO.LoginReq request) {
         BaseSuccessCode code = MemberSuccessCode.LOGIN_OK;
         return ApiResponse.onSuccess(code, memberService.login(request));
     }
@@ -69,7 +70,7 @@ public class MemberController {
     @PostMapping("/v1/users/me/preferences/foods")
     public ApiResponse<Void> setFoodPreferences(
             @RequestHeader("Authorization") String token,
-            @RequestBody MemberReqDTO.FoodPreferenceReq request) {
+            @Valid @RequestBody MemberReqDTO.FoodPreferenceReq request) {
         BaseSuccessCode code = MemberSuccessCode.PREFERENCE_OK;
         return ApiResponse.onSuccess(code, null);
     }

@@ -1,11 +1,16 @@
 package com.example.umc10th.domain.mission.service;
 
+import com.example.umc10th.domain.mission.converter.MissionConverter;
+import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,5 +86,16 @@ public class MissionServiceImpl implements MissionService {
                 .status("COMPLETE")
                 .rewardPoint(Math.toIntExact(memberMission.getMission().getPoint()))
                 .build();
+    }
+
+    // 내가 진행중인 미션 조회 (페이지네이션)
+    @Override
+    public MissionResDTO.MyMissionPageRes getMyChallengingMissions(MissionReqDTO.MyMissionsReq request) {
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+
+        Page<MemberMission> memberMissionPage = memberMissionRepository
+                .findByMemberIdAndStatus(request.getMemberId(), "CHALLENGING", pageable);
+
+        return MissionConverter.toMyMissionPageRes(memberMissionPage);
     }
 }

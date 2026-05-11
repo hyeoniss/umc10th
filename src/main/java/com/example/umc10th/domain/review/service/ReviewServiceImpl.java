@@ -1,11 +1,14 @@
 package com.example.umc10th.domain.review.service;
 
 import com.example.umc10th.domain.mission.entity.Store;
+import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +72,50 @@ public class ReviewServiceImpl implements ReviewService {
                 .rating(store.getScore())
                 .menus(List.of()) // Store에 menus 필드 추가 필요
                 .build();
+    }
+
+    // 내가 작성한 리뷰 조회 (커서 기반 페이지네이션)
+    @Override
+    public ReviewResDTO.MyReviewCursorRes getMyReviews(ReviewReqDTO.MyReviewsReq request) {
+        int size = request.getSize() != null ? request.getSize() : 10;
+        Pageable pageable = PageRequest.of(0, size + 1);
+
+        List<Review> reviews;
+        String sortBy = request.getSortBy() != null ? request.getSortBy() : "id";
+
+        if ("starRate".equals(sortBy)) {
+            reviews = getReviewsByStarRate(request, pageable);
+        } else {
+            reviews = getReviewsById(request, pageable);
+        }
+
+        boolean hasNext = reviews.size() > size;
+        if (hasNext) {
+            reviews = reviews.subList(0, size);
+        }
+
+        Long nextCursor = hasNext && !reviews.isEmpty()
+                ? reviews.get(reviews.size() - 1).getId()
+                : null;
+
+        return ReviewConverter.toMyReviewCursorRes(reviews, nextCursor, hasNext);
+    }
+
+    private List<Review> getReviewsById(ReviewReqDTO.MyReviewsReq request, Pageable pageable) {
+        if (request.getCursor() == null) {
+            return reviewRepository.findByMemberIdOrderByIdDesc(request.getMemberId(), pageable);
+        }
+        return reviewRepository.findByMemberIdAndIdLessThanOrderByIdDesc(
+                request.getMemberId(), request.getCursor(), pageable);
+    }
+
+    private List<Review> getReviewsByStarRate(ReviewReqDTO.MyReviewsReq request, Pageable pageable) {
+        if (request.getCursor() == null) {
+            return reviewRepository.findByMemberIdOrderByStarRateDescIdDesc(request.getMemberId(), pageable);
+        }
+        Review cursorReview = reviewRepository.findById(request.getCursor())
+                .orElseThrow(() -> new RuntimeException("커서 리뷰를 찾을 수 없습니다."));
+        return reviewRepository.findByMemberIdAndStarRateLessThanOrderByStarRateDescIdDesc(
+                request.getMemberId(), cursorReview.getStarRate(), cursorReview.getId(), pageable);
     }
 }
