@@ -6,6 +6,7 @@ import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class ReviewController {
     public ApiResponse<ReviewResDTO.CreateReviewRes> createReview(
             @RequestHeader("Authorization") String token,
             @PathVariable Long storeId,
-            @RequestBody ReviewReqDTO.CreateReviewReq request) {
+            @Valid @RequestBody ReviewReqDTO.CreateReviewReq request) {
         BaseSuccessCode code = ReviewSuccessCode.CREATE_OK;
         return ApiResponse.onSuccess(code, reviewService.createReview(token, storeId, request));
     }
@@ -45,7 +46,7 @@ public class ReviewController {
     // 내가 작성한 리뷰 조회 (커서 기반 페이지네이션)
     @PostMapping("/v1/users/me/reviews")
     public ApiResponse<ReviewResDTO.MyReviewCursorRes> getMyReviews(
-            @RequestBody ReviewReqDTO.MyReviewsReq request) {
+            @Valid @RequestBody ReviewReqDTO.MyReviewsReq request) {
         BaseSuccessCode code = ReviewSuccessCode.OK;
         return ApiResponse.onSuccess(code, reviewService.getMyReviews(request));
     }

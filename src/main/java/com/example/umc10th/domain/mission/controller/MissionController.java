@@ -6,6 +6,7 @@ import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +49,7 @@ public class MissionController {
 
     @PostMapping("/v1/users/me/missions/challenging")
     public ApiResponse<MissionResDTO.MyMissionPageRes> getMyChallengingMissions(
-            @RequestBody MissionReqDTO.MyMissionsReq request) {
+            @Valid @RequestBody MissionReqDTO.MyMissionsReq request) {
         BaseSuccessCode code = MissionSuccessCode.OK;
         return ApiResponse.onSuccess(code, missionService.getMyChallengingMissions(request));
     }

@@ -22,8 +22,11 @@ public enum GeneralErrorCode implements BaseErrorCode {
             "해당 리스트를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,
             "COMMON500_1",
-                    "서버 에러가 발생했습니다."),
-            ;
+            "서버 에러가 발생했습니다."),
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST,
+            "COMMON400_2",
+            "입력값이 유효하지 않습니다."),
+    ;
 
     private final HttpStatus status;
     private final String code;
