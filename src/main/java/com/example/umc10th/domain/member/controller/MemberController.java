@@ -17,11 +17,11 @@ public class MemberController {
     private final MemberService memberService;
 
     // 마이페이지
-    @PostMapping("/v1/users/me")
+    @GetMapping("/v1/users/me")
     public ApiResponse<MemberResDTO.GetInfo> getInfo(
-            @RequestBody MemberReqDTO.GetInfo dto) {
+            @RequestParam Long id) {
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.onSuccess(code, memberService.getInfo(dto));
+        return ApiResponse.onSuccess(code, memberService.getInfo(new MemberReqDTO.GetInfo(id)));
     }
 
     // 회원가입
@@ -29,7 +29,7 @@ public class MemberController {
     public ApiResponse<MemberResDTO.SignupRes> signup(
             @RequestBody MemberReqDTO.SignupReq request) {
         BaseSuccessCode code = MemberSuccessCode.SIGNUP_OK;
-        return ApiResponse.onSuccess(code, null);
+        return ApiResponse.onSuccess(code, memberService.signup(request));
     }
 
     // 로그인
@@ -37,10 +37,10 @@ public class MemberController {
     public ApiResponse<MemberResDTO.LoginRes> login(
             @RequestBody MemberReqDTO.LoginReq request) {
         BaseSuccessCode code = MemberSuccessCode.LOGIN_OK;
-        return ApiResponse.onSuccess(code, null);
+        return ApiResponse.onSuccess(code, memberService.login(request));
     }
 
-    // 로그아웃
+    // 로그아웃 (Security 구현 전 임시)
     @PostMapping("/v1/auth/logout")
     public ApiResponse<Void> logout(
             @RequestHeader("Authorization") String token) {
@@ -48,7 +48,7 @@ public class MemberController {
         return ApiResponse.onSuccess(code, null);
     }
 
-    // 회원 탈퇴
+    // 회원 탈퇴 (Security 구현 전 임시)
     @DeleteMapping("/v1/users/me")
     public ApiResponse<Void> deleteMember(
             @RequestHeader("Authorization") String token) {
@@ -62,7 +62,7 @@ public class MemberController {
             @RequestHeader("Authorization") String token,
             @RequestBody MemberReqDTO.UpdateReq request) {
         BaseSuccessCode code = MemberSuccessCode.UPDATE_OK;
-        return ApiResponse.onSuccess(code, null);
+        return ApiResponse.onSuccess(code, memberService.updateMemberInfo(request));
     }
 
     // 선호 음식 선택
@@ -80,7 +80,7 @@ public class MemberController {
             @RequestHeader("Authorization") String token,
             @RequestParam String status) {
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.onSuccess(code, null);
+        return ApiResponse.onSuccess(code, memberService.getMissions(1L, status));
     }
 
     // 본인 리뷰 조회
@@ -88,6 +88,6 @@ public class MemberController {
     public ApiResponse<MemberResDTO.ReviewListRes> getReviews(
             @PathVariable Long userId) {
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.onSuccess(code, null);
+        return ApiResponse.onSuccess(code, memberService.getReviews(userId));
     }
 }

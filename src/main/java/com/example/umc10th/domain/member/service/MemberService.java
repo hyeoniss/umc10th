@@ -1,29 +1,25 @@
 package com.example.umc10th.domain.member.service;
 
-import com.example.umc10th.domain.member.converter.MemberConverter;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
-import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
-import com.example.umc10th.domain.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class MemberService {
+public interface MemberService {
 
-    private final MemberRepository memberRepository;
+    // 마이페이지
+    MemberResDTO.GetInfo getInfo(MemberReqDTO.GetInfo dto);
 
-    public MemberResDTO.GetInfo getInfo(
-            MemberReqDTO.GetInfo dto
-    ) {
+    // 회원가입
+    MemberResDTO.SignupRes signup(MemberReqDTO.SignupReq request);
 
-        //DTO에서 유저 ID cncnf
-        Long memberId = dto.id();
-        //DB에서 해당 유저 ID로 데이터 조회
-        Member member = memberRepository.findById(MemberErrorCode.MEMBER_NOT_FOUND);
-        //컨버터를 이용해서 응답 DTO 생성 & return
-        return MemberConverter.toGetInfo(member);
-    }
+    // 로그인
+    MemberResDTO.LoginRes login(MemberReqDTO.LoginReq request);
+
+    // 사용자 정보 수정
+    MemberResDTO.MemberInfoRes updateMemberInfo(MemberReqDTO.UpdateReq request);
+
+    // 진행중/완료 미션 목록 조회
+    MemberResDTO.MissionListRes getMissions(Long memberId, String status);
+
+    // 본인 리뷰 조회
+    MemberResDTO.ReviewListRes getReviews(Long userId);
 }
