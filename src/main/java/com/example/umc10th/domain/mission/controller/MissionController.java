@@ -45,4 +45,11 @@ public class MissionController {
         BaseSuccessCode code = MissionSuccessCode.COMPLETE_OK;
         return ApiResponse.onSuccess(code, missionService.completeMission(token, userMissionId));
     }
+
+    @PostMapping("/v1/users/me/missions/challenging")
+    public ApiResponse<MissionResDTO.MyMissionPageRes> getMyChallengingMissions(
+            @RequestBody MissionReqDTO.MyMissionsReq request) {
+        BaseSuccessCode code = MissionSuccessCode.OK;
+        return ApiResponse.onSuccess(code, missionService.getMyChallengingMissions(request));
+    }
 }

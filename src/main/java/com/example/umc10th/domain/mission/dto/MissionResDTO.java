@@ -44,4 +44,25 @@ public class MissionResDTO {
             String status,
             Integer rewardPoint
     ) {}
+
+    // 내가 진행중인 미션 목록 (페이지네이션)
+    @Builder
+    public record MyMissionPageRes(
+            List<MyMissionInfo> missions,
+            Integer currentPage,
+            Integer totalPages,
+            Long totalElements,
+            Boolean isFirst,
+            Boolean isLast
+    ) {
+        @Builder
+        public record MyMissionInfo(
+                Long memberMissionId,
+                Long missionId,
+                String missionContent,
+                Integer reward,
+                String status,
+                String storeName
+        ) {}
+    }
 }
